@@ -1,0 +1,36 @@
+{
+  "name": "@next-stream-demo/standard-container",
+  "version": "1.0.0",
+  "description": "A flexible React container component with plugin architecture",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  },
+  "keywords": [
+    "react",
+    "component",
+    "container",
+    "plugin",
+    "typescript"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

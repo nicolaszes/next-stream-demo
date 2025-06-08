@@ -1,8 +1,18 @@
 'use client';
 
 import React, { useEffect, useState, ReactNode, useRef } from 'react';
-import { StandardContainer } from './StandardContainer/default';
-import { BasePlugin, DefaultErrorCapturePlugin, DefaultLazyLoadPlugin } from './StandardContainer/plugins';
+// 将原来的相对导入
+// import { StandardContainer } from './StandardContainer';
+
+// 更新为包导入
+import StandardContainer from '@next-stream-demo/standard-container';
+import {
+  BasePlugin,
+  DefaultErrorCapturePlugin,
+  DefaultLazyLoadPlugin,
+} from '@next-stream-demo/standard-container';
+
+console.log(15, StandardContainer)
 
 // 渐进式增强 Hook
 function useProgressiveEnhancement(enablePluginsOnClient: boolean) {
@@ -13,15 +23,12 @@ function useProgressiveEnhancement(enablePluginsOnClient: boolean) {
   useEffect(() => {
     // 标记开始水合
     setHydrationState('hydrating');
-    
+
     if (enablePluginsOnClient) {
       // 使用 requestIdleCallback 或 setTimeout 在空闲时初始化插件
       const enhanceWithPlugins = () => {
         console.log('🔥 开始渐进式增强，初始化插件');
-        setPlugins([
-          new DefaultErrorCapturePlugin(true),
-          new DefaultLazyLoadPlugin(true)
-        ]);
+        setPlugins([new DefaultErrorCapturePlugin(true), new DefaultLazyLoadPlugin(true)]);
         setHydrationState('enhanced');
       };
 
@@ -59,11 +66,7 @@ export default function HybridStandardContainer({
 
   return (
     <div ref={containerRef} data-hydration-state={hydrationState}>
-      <StandardContainer
-        plugins={plugins}
-        fallback={fallback}
-        componentName={componentName}
-      >
+      <StandardContainer plugins={plugins} fallback={fallback} componentName={componentName}>
         {children}
       </StandardContainer>
     </div>

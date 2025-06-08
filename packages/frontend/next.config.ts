@@ -6,8 +6,11 @@ const nextConfig: NextConfig = {
     // 启用 PPR (Partial Prerendering)
     // ppr: true,
     // 启用流式渲染
-    serverComponentsExternalPackages: [],
+    // serverComponentsExternalPackages 已移动到根级别的 serverExternalPackages
   },
+  
+  // 外部包配置（从 experimental 移动到这里）
+  serverExternalPackages: [],
   
   // 优化静态资源
   images: {

@@ -54,6 +54,9 @@ importers:
       '@next-stream-demo/shared':
         specifier: workspace:*
         version: link:../shared
+      '@next-stream-demo/standard-container':
+        specifier: workspace:*
+        version: link:../standard-container
       next:
         specifier: 15.3.3
         version: 15.3.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -96,6 +99,28 @@ importers:
     devDependencies:
       typescript:
         specifier: ^5.0.0
+        version: 5.8.3
+
+  packages/standard-container:
+    dependencies:
+      react:
+        specifier: '>=16.8.0'
+        version: 19.1.0
+      react-dom:
+        specifier: '>=16.8.0'
+        version: 19.1.0(react@19.1.0)
+    devDependencies:
+      '@types/node':
+        specifier: ^20
+        version: 20.19.0
+      '@types/react':
+        specifier: ^19
+        version: 19.1.6
+      '@types/react-dom':
+        specifier: ^19
+        version: 19.1.6(@types/react@19.1.6)
+      typescript:
+        specifier: ^5
         version: 5.8.3
 
 packages:

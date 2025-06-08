@@ -18,7 +18,7 @@ export interface UseMonitoringReturn {
 export function useMonitoring(options: UseMonitoringOptions = {}): UseMonitoringReturn {
   const { componentName, autoCollect = true, collectInterval = 30000 } = options;
   const timersRef = useRef<Map<string, number>>(new Map());
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const record = useCallback((metric: Omit<MonitoringMetric, 'timestamp'>) => {
     const monitoringMetric: MonitoringMetric = {
