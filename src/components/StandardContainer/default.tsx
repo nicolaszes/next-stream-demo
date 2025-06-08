@@ -1,5 +1,3 @@
-"use client";
-
 import React, { ReactNode, Suspense, ErrorInfo } from 'react';
 import { BaseContainer } from './core/BaseContainer';
 import { StandardContainerProps } from './types';
@@ -8,13 +6,17 @@ import { createPluginUtils } from './utils/pluginUtils';
 import { createTrackingUtils } from './utils/trackingUtils';
 import { createMonitoringUtils } from './utils/monitoringUtils';
 import { createLazyLoadUtils } from './utils/lazyLoadUtils';
+import { PluginConfig } from './core/types';
 
 export class StandardContainer extends BaseContainer<StandardContainerProps> {
   constructor(props: StandardContainerProps) {
     // 如果外部传入了plugins，直接使用；否则使用默认插件
     const finalPlugins = props.plugins || DEFAULT_PLUGINS;
-    
-    super(props, [...finalPlugins]);
+
+    super(
+      props,
+      [...finalPlugins] // 使用展开运算符创建新数组，解决只读数组到可变数组的转换
+    );
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
@@ -29,6 +31,11 @@ export class StandardContainer extends BaseContainer<StandardContainerProps> {
         this.componentName
       );
     }
+  }
+
+  // 在 StandardContainer 类中添加
+  protected getDefaultPlugins(): PluginConfig {
+    return [...DEFAULT_PLUGINS]; // 使用展开运算符创建新数组，解决只读数组到可变数组的转换
   }
 
   private getUtils() {
@@ -48,7 +55,9 @@ export class StandardContainer extends BaseContainer<StandardContainerProps> {
   private renderErrorFallback(error: Error | null, errorInfo: ErrorInfo | null) {
     const errorPlugin = this.pluginManager.getPlugin('error-capture');
     if (errorPlugin && 'renderFallback' in errorPlugin && errorPlugin.renderFallback) {
-      return (errorPlugin as { renderFallback: (error: Error, errorInfo: ErrorInfo, componentName: string) => ReactNode }).renderFallback(error!, errorInfo!, this.componentName);
+      return (
+        errorPlugin as { renderFallback: (error: Error, errorInfo: ErrorInfo, componentName: string) => ReactNode }
+      ).renderFallback(error!, errorInfo!, this.componentName);
     }
     return <div>Something went wrong.</div>;
   }
@@ -56,7 +65,7 @@ export class StandardContainer extends BaseContainer<StandardContainerProps> {
   render(): ReactNode {
     const { children, isLoading, fallback, errorCapture } = this.props as StandardContainerProps;
     const { hasError } = this.state || {};
-    
+
     const utils = this.getUtils();
 
     if (hasError) {

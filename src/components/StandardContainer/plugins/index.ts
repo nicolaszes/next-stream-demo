@@ -2,7 +2,7 @@
 export type { BasePlugin } from './base/BasePlugin';
 
 // 错误捕获插件
-export { DefaultErrorCapturePlugin } from './ErrorCapturePlugin';
+export { DefaultErrorCapturePlugin } from './ErrorCapturePlugin/index';
 export type { ErrorCapturePlugin } from './ErrorCapturePlugin/types';
 export { ERROR_CAPTURE_PLUGIN_TYPE } from './ErrorCapturePlugin/constants';
 
@@ -18,6 +18,6 @@ export { MONITORING_PLUGIN_TYPE } from './MonitoringPlugin';
 
 // 懒加载插件
 export { DefaultLazyLoadPlugin } from './LazyLoadPlugin';
-export type { LazyLoadPlugin, LazyLoadOptions } from './LazyLoadPlugin';
+export type { LazyLoadPlugin, LazyLoadOptions } from './LazyLoadPlugin/types';
 export { LAZY_LOAD_PLUGIN_TYPE } from './LazyLoadPlugin';
 export { LazyComponent, LazyImage, useLazyLoad } from './LazyLoadPlugin';

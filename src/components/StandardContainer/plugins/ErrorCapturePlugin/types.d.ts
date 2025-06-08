@@ -1,8 +1,6 @@
 import { ReactNode, ErrorInfo } from 'react';
-// 错误的导入路径
-import { BasePlugin } from '../BasePlugin'; // 这个路径不存在
-
-// 应该修改为
+import { ERROR_CAPTURE_PLUGIN_TYPE } from './constants';
+// 修复导入路径
 import { BasePlugin } from '../base/BasePlugin';
 
 export interface ErrorCapturePlugin extends BasePlugin {

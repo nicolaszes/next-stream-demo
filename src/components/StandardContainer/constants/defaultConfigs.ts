@@ -1,13 +1,13 @@
-import { DefaultErrorCapturePlugin } from '../plugins/ErrorCapturePlugin';
+import { DefaultErrorCapturePlugin } from '../plugins/ErrorCapturePlugin/index';
 import { DefaultTrackingPlugin } from '../plugins/TrackingPlugin';
 import { DefaultMonitoringPlugin } from '../plugins/MonitoringPlugin';
 import { DefaultLazyLoadPlugin } from '../plugins/LazyLoadPlugin';
 
 export const DEFAULT_PLUGINS = [
-  new DefaultErrorCapturePlugin(),
-  new DefaultTrackingPlugin(),
-  new DefaultMonitoringPlugin(),
-  new DefaultLazyLoadPlugin(),
+  new DefaultErrorCapturePlugin(false),
+  new DefaultTrackingPlugin(false),
+  new DefaultMonitoringPlugin(false),
+  new DefaultLazyLoadPlugin(false),
 ] as const;
 
 export const PLUGIN_PRIORITIES = {

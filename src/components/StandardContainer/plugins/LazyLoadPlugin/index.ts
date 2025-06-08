@@ -1,5 +1,5 @@
 export { DefaultLazyLoadPlugin } from './default';
-export type { LazyLoadPlugin, LazyLoadOptions } from './types';
+export type { LazyLoadOptions } from './types';
 export { LAZY_LOAD_PLUGIN_TYPE } from './constants';
 export { LazyComponent } from './components/LazyComponent';
 export { LazyImage } from './components/LazyImage';

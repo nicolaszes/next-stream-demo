@@ -5,10 +5,11 @@ export class PluginManager {
   private plugins: BasePlugin[];
 
   constructor(plugins: PluginConfig = []) {
-    this.plugins = plugins.map(plugin => ({
-      ...plugin, 
-      enabled: plugin.enabled ?? true
-    }));
+    this.plugins = plugins.map(plugin => {
+      // 直接修改原对象的 enabled 属性，保持原型链
+      Object.assign(plugin, { enabled: plugin.enabled ?? true });
+      return plugin;
+    });
   }
 
   // 通用的获取插件方法 - 只返回启用的插件
@@ -85,8 +86,18 @@ export class PluginManager {
     this.plugins
       .filter(plugin => plugin.enabled !== false)
       .forEach(plugin => {
+        console.log(`Initializing plugin:`, {
+          type: plugin.type,
+          name: plugin.name,
+          hasInitialize: typeof plugin.initialize === 'function',
+          plugin: plugin
+        });
+  
+        console.log(`Plugin enabled:`, plugin.initialize && typeof plugin.initialize === 'function');
         if (plugin.initialize && typeof plugin.initialize === 'function') {
           plugin.initialize(componentName);
+        } else {
+          console.warn(`Plugin ${plugin.name} does not have a valid initialize method:`, plugin);
         }
       });
   }

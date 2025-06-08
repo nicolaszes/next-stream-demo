@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 
 import ArticleHeader from './components/ArticleHeader';
 import ArticleContent from './components/ArticleContent';
@@ -6,7 +7,11 @@ import ArticleActions from './components/ArticleActions';
 import RelatedArticles from './components/RelatedArticles';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 
-import { StandardContainer } from '../../components/StandardContainer/default';
+// 动态导入混合渲染组件，但允许 SSR
+const HybridStandardContainer = dynamic(
+  () => import('../../components/HybridStandardContainer'),
+  { ssr: true } // 允许 SSR
+);
 
 export default function ArticleDetailPage() {
   return (
@@ -49,14 +54,14 @@ export default function ArticleDetailPage() {
 
       {/* 文章内容区域 */}
       <div className="bg-white">
-        {/* 文章头部信息 - 流式加载 */}
-        <StandardContainer fallback={<LoadingSkeleton type="article-header" />} componentName="ArticleHeader">
+        {/* SSR 渲染 + 客户端插件激活 */}
+        <HybridStandardContainer
+          componentName="ArticleHeader"
+          fallback={<LoadingSkeleton type="article-header" />}
+          enablePluginsOnClient={true}
+        >
           <ArticleHeader />
-        </StandardContainer>
-
-        {/* <Suspense fallback={<LoadingSkeleton type="article-header" />}>
-          <ArticleHeader />
-        </Suspense> */}
+        </HybridStandardContainer>
 
         {/* 文章正文内容 - 流式加载 */}
         <Suspense fallback={<LoadingSkeleton type="article-content" />}>

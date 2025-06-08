@@ -13,28 +13,18 @@ export class ErrorCapturePlugin implements BasePlugin {
   }
 
   initialize(componentName: string) {
+    console.log('🔥 ErrorCapturePlugin initialize 被调用了！', componentName);
     initializePlugin(this, componentName, '错误捕获功能');
     
     if (this.enabled) {
-      // 原有的错误捕获逻辑
       console.log(`ErrorCapturePlugin initialized for ${componentName}`);
     }
   }
 }
 
-export class DefaultErrorCapturePlugin implements ErrorCapturePlugin {
+export class DefaultErrorCapturePlugin extends ErrorCapturePlugin {
   type: typeof ERROR_CAPTURE_PLUGIN_TYPE = ERROR_CAPTURE_PLUGIN_TYPE;
   name = 'DefaultErrorCapture';
-  enabled: boolean = true;
-
-  initialize(componentName: string) {
-    initializePlugin(this, componentName, '错误捕获功能');
-    
-    if (this.enabled) {
-      // 原有的错误捕获逻辑
-      console.log(`ErrorCapturePlugin initialized for ${componentName}`);
-    }
-  }
 
   onError(error: Error, errorInfo: ErrorInfo, componentName?: string): void {
     console.error(`[${componentName || 'StandardContainer'}] Component Error:`, error);
