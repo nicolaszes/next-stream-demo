@@ -13,7 +13,7 @@ export class MonitoringPlugin implements BasePlugin {
   }
 
   initialize(componentName: string) {
-    console.log('🔥 MonitoringPlugin initialize 被调用了！', componentName);
+    // console.log('🔥 MonitoringPlugin initialize 被调用了！', componentName);
     initializePlugin(this, componentName, '性能监控功能');
     
     if (this.enabled) {

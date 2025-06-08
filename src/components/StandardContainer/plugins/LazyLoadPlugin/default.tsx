@@ -16,7 +16,7 @@ export class LazyLoadPlugin implements BasePlugin {
   }
 
   initialize(componentName: string) {
-    console.log('🔥 LazyloadPlugin initialize 被调用了！', componentName);
+    // console.log('🔥 LazyloadPlugin initialize 被调用了！', componentName);
     initializePlugin(this, componentName, '懒加载功能');
 
     if (this.enabled) {

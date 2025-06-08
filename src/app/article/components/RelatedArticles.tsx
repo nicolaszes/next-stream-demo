@@ -25,6 +25,7 @@ async function getRelatedArticles(): Promise<RelatedArticle[]> {
 export default async function RelatedArticles() {
   const articles = await getRelatedArticles()
 
+  console.log('relatedArticles', articles);
   return (
     <div className="px-4 py-6">
       <h2 className="text-lg font-semibold text-gray-900 mb-4">相关推荐</h2>

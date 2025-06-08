@@ -1,5 +1,3 @@
-'use client';
-
 import { Component, ReactNode } from 'react';
 import { PluginManager } from './PluginManager';
 import type { BaseContainerProps, BaseContainerState, PluginConfig } from './types';
@@ -31,11 +29,6 @@ export abstract class BaseContainer<
     const pluginsChanged = JSON.stringify(prevProps.plugins) !== JSON.stringify(this.props.plugins);
 
     if (pluginsChanged) {
-      console.log('🔄 检测到 plugins 变化，重新初始化', {
-        prev: prevProps.plugins?.length || 0,
-        current: this.props.plugins?.length || 0,
-      });
-
       // 重新初始化插件（需要传入 defaultPlugins，这里需要子类提供）
       this.reinitializePlugins();
     }
@@ -46,12 +39,6 @@ export abstract class BaseContainer<
 
   // 提取插件初始化逻辑
   private initializePlugins(props: P, defaultPlugins: PluginConfig) {
-    console.log('🔄 初始化插件中...', {
-      componentName: this.componentName,
-      propsPlugins: props.plugins?.length || 0,
-      defaultPlugins: defaultPlugins.length,
-    });
-
     // 合并默认插件和外部传入插件
     const finalPlugins = [...defaultPlugins];
     if (props.plugins) {

@@ -13,7 +13,7 @@ export class ErrorCapturePlugin implements BasePlugin {
   }
 
   initialize(componentName: string) {
-    console.log('🔥 ErrorCapturePlugin initialize 被调用了！', componentName);
+    // console.log('🔥 ErrorCapturePlugin initialize 被调用了！', componentName);
     initializePlugin(this, componentName, '错误捕获功能');
     
     if (this.enabled) {

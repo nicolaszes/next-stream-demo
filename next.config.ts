@@ -1,26 +1,17 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   // 启用实验性功能
   experimental: {
-    // 服务器组件
-    serverComponentsExternalPackages: [],
-    // 部分预渲染 (需要 Next.js 14+)
+    // 启用 PPR (Partial Prerendering)
     // ppr: true,
+    // 启用流式渲染
+    serverComponentsExternalPackages: [],
   },
   
-  // 移动端优化
+  // 优化静态资源
   images: {
-    formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    // 添加允许的外部图片域名
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'https://p26-sign.toutiaoimg.com',
-        port: '',
-        pathname: '/**',
-      },
       {
         protocol: 'https',
         hostname: '*.toutiaoimg.com',
@@ -28,27 +19,39 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+    formats: ['image/webp', 'image/avif'],
   },
   
-  // 压缩优化
+  // 编译优化
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  
+  // 启用 gzip 压缩
   compress: true,
   
-  // PWA 支持准备
-  headers: async () => [
-    {
-      source: '/(.*)',
-      headers: [
-        {
-          key: 'X-Content-Type-Options',
-          value: 'nosniff',
+  // 静态优化
+  trailingSlash: false,
+  
+  // 自定义 webpack 配置
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // 客户端代码分割优化
+      config.optimization.splitChunks = {
+        ...config.optimization.splitChunks,
+        cacheGroups: {
+          ...config.optimization.splitChunks.cacheGroups,
+          plugins: {
+            name: 'plugins',
+            test: /[\\/]StandardContainer[\\/]/,
+            chunks: 'all',
+            priority: 10,
+          },
         },
-        {
-          key: 'X-Frame-Options',
-          value: 'DENY',
-        },
-      ],
-    },
-  ],
-}
+      };
+    }
+    return config;
+  },
+};
 
-module.exports = nextConfig
+export default nextConfig;

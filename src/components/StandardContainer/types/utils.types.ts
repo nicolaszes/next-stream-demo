@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { TrackingEvent, MonitoringMetric, LazyLoadOptions } from '../plugins';
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace UtilsTypes {
   // 插件管理工具类型
   export interface PluginUtils {

@@ -86,16 +86,8 @@ export class PluginManager {
     this.plugins
       .filter(plugin => plugin.enabled !== false)
       .forEach(plugin => {
-        console.log(`Initializing plugin:`, {
-          type: plugin.type,
-          name: plugin.name,
-          hasInitialize: typeof plugin.initialize === 'function',
-          plugin: plugin
-        });
-  
-        console.log(`Plugin enabled:`, plugin.initialize && typeof plugin.initialize === 'function');
         if (plugin.initialize && typeof plugin.initialize === 'function') {
-          plugin.initialize(componentName);
+          plugin?.initialize(componentName);
         } else {
           console.warn(`Plugin ${plugin.name} does not have a valid initialize method:`, plugin);
         }
