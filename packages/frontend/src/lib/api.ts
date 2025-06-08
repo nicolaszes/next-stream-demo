@@ -1,10 +1,4 @@
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api'
-
-export interface ApiResponse<T> {
-  data: T
-  message?: string
-  success: boolean
-}
+import { ApiResponse, Article, formatDate, delay } from '@next-stream-demo/shared';
 
 // Mock数据定义 - 只保留文章相关数据
 const mockData = {
@@ -23,7 +17,7 @@ const mockData = {
   articleContent: {
     content: `日本的现状确实有很多地方值得中国警惕，日本如今的单身社会现象很严重，40%家庭是"一人户"，中国独居人口也突破1.25亿，北上广深30岁以上未婚率超30%。
 
-这一切看似令人担忧，但我们真的需要因此过度恐慌吗？我们常常从极端到极端地看待问题，一边担心人口下降带来的挑战，一边又对现状感到焦虑，但其实人口的自然变化是一个正常的社会现象，不必过度焦虑。
+这一切看似令人担忧，但我们真的需要因此过度恐慌吗？我们常常从极端到极端地看待问题，一边担心人口下降带来的挑战，一边又对现状感到焦虑，但实际上人口的自然变化是一个正常的社会现象，不必过度焦虑。
 
 如果人口逐渐减少，那又怎样？更重要地，技术的发展会帮助我们应对这些挑战，机器人技术的崛起，尤其是在制造业和服务业中，正逐步填补劳动市场的空缺。
 
@@ -80,9 +74,6 @@ const mockData = {
   ]
 }
 
-// 模拟网络延迟的工具函数
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
 // Mock API 客户端
 class MockApiClient {
   async get<T>(endpoint: string): Promise<ApiResponse<T>> {
@@ -106,6 +97,7 @@ class MockApiClient {
     }
     
     return {
+      timestamp: Date.now(),
       success: true,
       data: data as T,
       message: 'Mock data loaded successfully'
@@ -115,8 +107,8 @@ class MockApiClient {
   async post<T>(endpoint: string, requestData?: Record<string, unknown>): Promise<ApiResponse<T>> {
     await delay(Math.random() * 800 + 300)
     
-    // 模拟POST请求的响应
     return {
+      timestamp: Date.now(),
       success: true,
       data: { id: Date.now(), ...requestData } as T,
       message: 'Mock post request successful'
@@ -127,6 +119,7 @@ class MockApiClient {
     await delay(Math.random() * 600 + 400)
     
     return {
+      timestamp: Date.now(),
       success: true,
       data: requestData as T,
       message: 'Mock put request successful'
@@ -139,6 +132,7 @@ class MockApiClient {
     return {
       success: true,
       data: null as T,
+      timestamp: Date.now(),
       message: 'Mock delete request successful'
     }
   }
@@ -161,3 +155,19 @@ export const interactionApi = {
   uncollectArticle: (articleId: string) => apiClient.delete<string>(`/article/${articleId}/collect`),
   shareArticle: (articleId: string, platform: string) => apiClient.post<unknown>(`/article/${articleId}/share`, { platform }),
 }
+
+export const fetchArticles = async (): Promise<ApiResponse<Article[]>> => {
+  // 使用共享的类型和工具函数
+  const response = await fetch('/api/articles');
+  const data = await response.json();
+  
+  return {
+    success: true,
+    data: data.map((article: Article) => ({
+      ...article,
+      createdAt: formatDate(article.createdAt)
+    })),
+    message: 'Articles fetched successfully',
+    timestamp: Date.now()
+  };
+};
