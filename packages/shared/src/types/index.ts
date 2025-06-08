@@ -18,9 +18,16 @@ export interface Article {
   id: string;
   title: string;
   content: string;
-  author: string;
+  author: {
+    name: string;
+    avatar?: string;
+  };
   createdAt: string;
   updatedAt: string;
+
+  summary: string;
+  publishTime: string;
+  readCount: number;
 }
 
 export interface User {

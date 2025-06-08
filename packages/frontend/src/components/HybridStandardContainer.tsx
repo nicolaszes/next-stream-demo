@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useEffect, useState, ReactNode, useRef } from 'react';
-// 将原来的相对导入
-// import { StandardContainer } from './StandardContainer';
 
 // 更新为包导入
 import StandardContainer from '@next-stream-demo/standard-container';
@@ -12,7 +10,12 @@ import {
   DefaultLazyLoadPlugin,
 } from '@next-stream-demo/standard-container';
 
-console.log(15, StandardContainer)
+interface HybridStandardContainerProps {
+  children: ReactNode;
+  componentName: string;
+  fallback?: ReactNode;
+  enablePluginsOnClient?: boolean;
+}
 
 // 渐进式增强 Hook
 function useProgressiveEnhancement(enablePluginsOnClient: boolean) {
@@ -45,13 +48,6 @@ function useProgressiveEnhancement(enablePluginsOnClient: boolean) {
   }, [enablePluginsOnClient]);
 
   return { hydrationState, plugins, containerRef };
-}
-
-interface HybridStandardContainerProps {
-  children: ReactNode;
-  componentName: string;
-  fallback?: ReactNode;
-  enablePluginsOnClient?: boolean;
 }
 
 export default function HybridStandardContainer({

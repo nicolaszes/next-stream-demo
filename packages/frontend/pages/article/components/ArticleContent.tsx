@@ -6,6 +6,10 @@ import { DefaultErrorCapturePlugin, DefaultLazyLoadPlugin } from '@next-stream-d
 
 interface ArticleContentProps {
   articleId: string;
+  initialContent?: {
+    content: string;
+    images: string[];
+  } | null;
 }
 
 interface ArticleContentData {
@@ -13,12 +17,17 @@ interface ArticleContentData {
   images: string[];
 }
 
-export default function ArticleContent({ articleId }: ArticleContentProps) {
-  const [content, setContent] = useState<ArticleContentData | null>(null);
-  const [loading, setLoading] = useState(true);
+export default function ArticleContent({ articleId, initialContent }: ArticleContentProps) {
+  const [content, setContent] = useState<ArticleContentData | null>(initialContent || null);
+  const [loading, setLoading] = useState(!initialContent);
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
+    // 如果已经有初始内容，就不需要再次请求
+    if (initialContent) {
+      return;
+    }
+
     let isMounted = true;
     
     const loadContent = async () => {
@@ -26,7 +35,7 @@ export default function ArticleContent({ articleId }: ArticleContentProps) {
         console.log('📖 开始加载文章内容');
         
         // 模拟网络延迟
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 800));
         
         const response = await fetch('/api/article/content');
         
@@ -60,7 +69,7 @@ export default function ArticleContent({ articleId }: ArticleContentProps) {
     return () => {
       isMounted = false;
     };
-  }, [articleId]);
+  }, [articleId, initialContent]);
   
   if (loading) {
     return (

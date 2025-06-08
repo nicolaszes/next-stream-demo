@@ -1,7 +1,9 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 
-import StreamingContent from '@/app/article/components/StreamingContent';
-import StaticArticleHeader from '@/app/article/components/StaticArticleHeader';
+import StreamingContent from '@/app/article/composites/StreamingContent';
+import StaticArticleHeader from '@/app/article/composites/StaticArticleHeader';
+
+import HybridStandardContainer from '@/components/HybridStandardContainer';
 
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 
@@ -36,12 +38,14 @@ export default function ArticleDetailPage() {
       </header>
 
       {/* 文章标题区域 - 静态渲染 */}
-      <Suspense fallback={<LoadingSkeleton type="article-content" />}>
+      <HybridStandardContainer componentName="Article-Header" fallback={<LoadingSkeleton type="article-header" />}>
         <StaticArticleHeader />
-      </Suspense>
+      </HybridStandardContainer>
 
       {/* 流式渲染内容 - 延迟加载 */}
-      <StreamingContent />
+      <HybridStandardContainer componentName="Article-Content" fallback={<LoadingSkeleton type="article-content" />}>
+        <StreamingContent />
+      </HybridStandardContainer>
     </main>
   );
 }

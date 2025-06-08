@@ -40,7 +40,7 @@ export default async function StaticArticleHeader() {
   // 尝试获取动态数据，失败时使用静态数据
   const articleInfo = await getArticleInfo();
 
-  console.log('StaticArticleHeader articleInfo', articleInfo);
+  // console.log('StaticArticleHeader articleInfo', articleInfo);
 
   return (
     <div className="px-4 py-6">

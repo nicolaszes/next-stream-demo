@@ -18,19 +18,20 @@ export default function ClientRelatedArticles() {
       try {
         // 模拟 API 调用
         await new Promise((resolve) => setTimeout(resolve, 500));
-        // const mockArticles = [
-        //   {
-        //     id: 1,
-        //     title: "相关文章标题 1",
-        //     summary: "这是文章摘要...",
-        //     author: "作者1",
-        //     readCount: 1200,
-        //     publishTime: "2小时前",
-        //     image: null
-        //   },
-        //   // ... 更多文章
-        // ];
-        // setArticles(mockArticles);
+        const mockArticles = [
+          {
+            id: 1,
+            title: "相关文章标题 1",
+            summary: "这是文章摘要...",
+            author: "作者1",
+            readCount: 1200,
+            publishTime: "2小时前",
+            image: null
+          },
+          // ... 更多文章
+        ];
+        // @ts-expect-error
+        setArticles(mockArticles);
       } catch (error) {
         console.error('获取相关文章失败:', error);
       } finally {
