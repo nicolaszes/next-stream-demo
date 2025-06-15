@@ -48,7 +48,6 @@ export function useHydration() {
       
       // 更新 DOM 状态
       document.querySelectorAll('.hydration-pending').forEach(el => {
-        el.classList.remove('hydration-pending');
         el.classList.add('hydration-complete');
       });
       

@@ -26,7 +26,7 @@ export default function ArticleContent({ articleId }: ArticleContentProps) {
         console.log('📖 开始加载文章内容');
         
         // 模拟网络延迟
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 400));
         
         const response = await fetch('/api/article/content');
         

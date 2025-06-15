@@ -1,8 +1,4 @@
-'use client';
-
 import { useEffect, useState } from 'react';
-import StandardContainer from '@next-stream-demo/standard-container';
-import { DefaultErrorCapturePlugin, DefaultLazyLoadPlugin } from '@next-stream-demo/standard-container';
 
 interface ArticleContentProps {
   articleId: string;
@@ -105,39 +101,34 @@ export default function ArticleContent({ articleId, initialContent }: ArticleCon
   if (!content) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="text-center py-8 text-gray-500">暂无内容</div>
+        <div className="text-center py-8 text-gray-500">
+          暂无内容
+        </div>
       </div>
     );
   }
   
   return (
-    <StandardContainer
-      plugins={[new DefaultErrorCapturePlugin(true), new DefaultLazyLoadPlugin(true)]}
-      componentName="ArticleContent"
-      fallback={<div className="text-center py-4">加载中...</div>}
-    >
-      {(utils) => (
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="prose prose-gray max-w-none">
-            <div className="text-gray-800 leading-relaxed whitespace-pre-line text-base">
-              {content.content}
-            </div>
-            
-            {content.images && content.images.length > 0 && (
-              <div className="mt-6 space-y-4">
-                {content.images.map((img, index) => (
-                  <div key={index} className="my-6">
-                    {utils.createLazyImage(img, `文章图片 ${index + 1}`, {
-                      className: 'w-full rounded-lg shadow-sm object-cover',
-                      style: { maxHeight: '400px' }
-                    })}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+    <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="prose prose-gray max-w-none">
+        <div className="whitespace-pre-line text-gray-800 leading-relaxed mb-6">
+          {content.content}
         </div>
-      )}
-    </StandardContainer>
+        
+        {content.images && content.images.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            {content.images.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`文章图片 ${index + 1}`}
+                className="w-full h-auto rounded-lg object-cover"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

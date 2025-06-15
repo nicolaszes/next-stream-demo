@@ -1,8 +1,4 @@
-'use client';
-
 import { useEffect, useState } from 'react';
-import StandardContainer from '@next-stream-demo/standard-container';
-import { DefaultErrorCapturePlugin, DefaultLazyLoadPlugin } from '@next-stream-demo/standard-container';
 
 interface RelatedArticle {
   id: string;
@@ -69,45 +65,37 @@ export default function RelatedArticles() {
   }
   
   return (
-    <StandardContainer
-      plugins={[new DefaultErrorCapturePlugin(true), new DefaultLazyLoadPlugin(true)]}
-      componentName="RelatedArticles"
-      fallback={<div className="text-center py-4">加载中...</div>}
-    >
-      {() => (
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">相关推荐</h2>
-          <div className="space-y-4">
-            {articles.map((article) => (
-              <div 
-                key={article.id} 
-                className="flex space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
-                onClick={() => {
-                  // 这里可以添加路由跳转逻辑
-                  console.log('点击文章:', article.title);
-                }}
-              >
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-gray-900 line-clamp-2 mb-2">
-                    {article.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                    {article.summary}
-                  </p>
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <div className="flex items-center space-x-2">
-                      <span>{article.author}</span>
-                      <span>•</span>
-                      <span>{article.readCount.toLocaleString()}阅读</span>
-                    </div>
-                    <span>{article.publishTime}</span>
-                  </div>
+    <div className="bg-white rounded-lg shadow-sm p-6">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">相关推荐</h2>
+      <div className="space-y-4">
+        {articles.map((article) => (
+          <div 
+            key={article.id} 
+            className="flex space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+            onClick={() => {
+              // 这里可以添加路由跳转逻辑
+              console.log('点击文章:', article.title);
+            }}
+          >
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-gray-900 line-clamp-2 mb-2">
+                {article.title}
+              </h3>
+              <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                {article.summary}
+              </p>
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center space-x-2">
+                  <span>{article.author}</span>
+                  <span>•</span>
+                  <span>{article.readCount.toLocaleString()}阅读</span>
                 </div>
+                <span>{article.publishTime}</span>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      )}
-    </StandardContainer>
+        ))}
+      </div>
+    </div>
   );
 }
