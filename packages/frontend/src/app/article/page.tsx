@@ -1,51 +1,66 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 
-import StreamingContent from '@/app/article/composites/StreamingContent';
-import StaticArticleHeader from '@/app/article/composites/StaticArticleHeader';
-
+import LoadingSkeleton from '@/components/LoadingSkeleton';
 import HybridStandardContainer from '@/components/HybridStandardContainer';
 
-import LoadingSkeleton from '../../components/LoadingSkeleton';
+import NavHeaderServer from '@/app/article/components/NavHeader/NavHeaderServer';
+import NavHeaderHydration from '@/app/article/components/NavHeader/NavHeaderHydration';
+
+import ArticleHeaderServer from '@/app/article/components/ArticleHeader/ArticleHeaderServer';
+import ArticleHeaderHydration from '@/app/article/components/ArticleHeader/ArticleHeaderHydration';
+
+// 关键组件立即加载
+import ArticleContent from '@/app/article/components/ArticleContent/ArticleContent';
+
+import AsyncArticleActions from '@/app/article/components/AsyncSections/AsyncArticleActions';
+import AsyncArticlesRelated from '@/app/article/components/AsyncSections/AsyncArticlesRelated';
+// // 非关键组件 - 客户端懒加载
+// const AsyncArticleActions = dynamic(() => import('@/app/article/components/AsyncSections/AsyncArticleActions'), {
+//   ssr: false, // 关闭 SSR，客户端渲染
+//   loading: () => <LoadingSkeleton type="article-actions" />,
+// });
+
+// const AsyncArticlesRelated = dynamic(() => import('@/app/article/components/AsyncSections/AsyncArticlesRelated'), {
+//   ssr: false, // 关闭 SSR，客户端渲染
+//   loading: () => <LoadingSkeleton type="articles-related" />,
+// });
 
 export default function ArticleDetailPage() {
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* 首屏静态内容 - 立即渲染 */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 -ml-2 rounded-full hover:bg-gray-100">
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </div>
-            <span className="text-sm text-gray-600">资讯详情</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            {/* 静态按钮 - 无交互 */}
-            <div className="p-2 rounded-full">
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* 导航头部 - 固定高度 */}
+      <div className="h-16">
+        <HybridStandardContainer componentName="Nav-Header" fallback={<LoadingSkeleton type="article-header" />}>
+          <NavHeaderServer title="资讯详情" />
+          <NavHeaderHydration />
+        </HybridStandardContainer>
+      </div>
 
-      {/* 文章标题区域 - 静态渲染 */}
-      <HybridStandardContainer componentName="Article-Header" fallback={<LoadingSkeleton type="article-header" />}>
-        <StaticArticleHeader />
-      </HybridStandardContainer>
+      {/* 文章标题区域 - 预留最小高度 */}
+      <div className="min-h-[120px]">
+        <HybridStandardContainer componentName="Article-Header" fallback={<LoadingSkeleton type="article-header" />}>
+          <ArticleHeaderServer />
+          <ArticleHeaderHydration />
+        </HybridStandardContainer>
+      </div>
 
-      {/* 流式渲染内容 - 延迟加载 */}
-      <HybridStandardContainer componentName="Article-Content" fallback={<LoadingSkeleton type="article-content" />}>
-        <StreamingContent />
-      </HybridStandardContainer>
+      {/* 文章正文 - 预留内容区域 */}
+      <div className="min-h-[800px]">
+        <HybridStandardContainer componentName="Article-Content-Priority" fallback={<LoadingSkeleton type="article-content" />}>
+          <ArticleContent articleId="" />
+        </HybridStandardContainer>
+      </div>
+
+      {/* 交互操作栏 - 客户端懒加载 */}
+      <div className="h-20">
+        <AsyncArticleActions />
+      </div>
+
+      {/* 相关推荐 - 客户端懒加载 */}
+      <div className="min-h-[300px]">
+        <AsyncArticlesRelated />
+      </div>
     </main>
   );
 }

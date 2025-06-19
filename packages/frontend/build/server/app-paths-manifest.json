@@ -1,0 +1,7 @@
+{
+  "/api/article/content/route": "app/api/article/content/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/article/related/route": "app/api/article/related/route.js",
+  "/article/page": "app/article/page.js"
+}

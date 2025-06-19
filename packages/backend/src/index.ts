@@ -4,7 +4,7 @@ import { DataService } from './services/dataService';
 import { HtmlGenerator } from './services/htmlGenerator';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3003;
 
 // 中间件
 app.use(cors());
@@ -13,11 +13,29 @@ app.use(express.static('public'));
 
 // 创建HTML生成器实例
 const htmlGenerator = new HtmlGenerator({
-  nextjsBaseUrl: process.env.NEXTJS_BASE_URL || 'http://localhost:3000',
+  nextjsBaseUrl: process.env.NEXTJS_BASE_URL || 'http://localhost:3002',
   enableCache: process.env.NODE_ENV === 'production'
 });
 
-// 首屏路由
+// 首页路由
+app.get('/', (_req, res) => {
+  try {
+    const homeData = {
+      title: 'Next.js + Node.js 集成应用',
+      description: '基于Next.js App Router + Node.js后端的移动端应用'
+    };
+    const htmlContent = htmlGenerator.generateHomeHTML(homeData);
+    
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', process.env.NODE_ENV === 'production' ? 'public, max-age=300' : 'no-cache');
+    res.send(htmlContent);
+  } catch (error) {
+    console.error('生成首页HTML失败:', error);
+    res.status(500).json({ error: '服务器内部错误' });
+  }
+});
+
+// 文章页面路由（已存在）
 app.get('/article', (_req, res) => {
   try {
     const initialData = DataService.getInitialData();

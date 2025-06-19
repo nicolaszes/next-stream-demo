@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     // 启用流式渲染
     // serverComponentsExternalPackages 已移动到根级别的 serverExternalPackages
   },
+
+  distDir: 'build', // 现在会生成到 /build 目录
   
   // 外部包配置（从 experimental 移动到这里）
   serverExternalPackages: [],

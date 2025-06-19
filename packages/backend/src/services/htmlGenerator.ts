@@ -105,15 +105,13 @@ export class HtmlGenerator {
   private generateArticleHeader(data: InitialData): string {
     const { article } = data;
     return `
-      <div class="bg-white">
+      <div id="article-title-section" class="bg-white">
           <div class="max-w-4xl mx-auto px-4 py-6">
               <h1 class="text-2xl font-bold text-gray-900 mb-4 leading-tight">${this.escapeHtml(article.title)}</h1>
               <div class="flex items-center justify-between text-sm text-gray-600 mb-6">
                   <div class="flex items-center space-x-4">
                       <div class="flex items-center space-x-2">
-                          <img src="${article.author.avatar}" alt="${this.escapeHtml(
-      article.author.name
-    )}" class="w-6 h-6 rounded-full">
+
                           <span class="font-medium">作者：${this.escapeHtml(article.author.name)}</span>
                           ${article.author.verified ? '<span class="text-blue-500">✓</span>' : ''}
                       </div>
@@ -157,79 +155,88 @@ export class HtmlGenerator {
    * 生成脚本
    */
   private generateScripts(data: InitialData): string {
-    // 检查是否为开发环境
     const isDev = process.env.NODE_ENV !== 'production';
+    
+    return `
+        <!-- 初始数据注入 -->
+        <script id="initial-data" type="application/json">
+            ${JSON.stringify(data)}
+        </script>
 
-    if (!isDev) {
-      // 开发环境：简化脚本加载，避免404错误
-      return `
-          <!-- 初始数据注入 -->
-          <script id="initial-data" type="application/json">
-              ${JSON.stringify(data)}
-          </script>
-  
-          <!-- 水合标记 -->
-          <script>
-              window.__HYDRATION_READY__ = true;
-              window.__INITIAL_DATA__ = ${JSON.stringify(data)};
-              window.__HYDRATION_CONFIG__ = {
-                  enableCache: ${this.config.enableCache},
-                  version: '${data.meta.version}'
-              };
-              
-              // 开发环境：简化水合逻辑
-              window.addEventListener('DOMContentLoaded', function() {
-                  console.log('🚀 开发环境：页面加载完成');
-                  
-                  // 移除加载状态
-                  const pendingElements = document.querySelectorAll('.hydration-pending');
-                  pendingElements.forEach(el => {
-                      el.classList.remove('hydration-pending');
-                      el.classList.add('hydration-complete');
-                  });
-                  
-                  // 模拟内容加载
-                  setTimeout(() => {
-                      const contentEl = document.getElementById('article-content');
-                      if (contentEl) {
-                          contentEl.innerHTML = '<div class="max-w-4xl mx-auto px-4 py-6"><div class="bg-white rounded-lg shadow-sm p-6"><p class="text-gray-700 leading-relaxed">内容正在通过 CSR 方式加载...</p></div></div>';
-                      }
-                  }, 1000);
-              });
-          </script>`;
-    } else {
-      // 生产环境：完整的Next.js资源加载
-      return `
-          <!-- 初始数据注入 -->
-          <script id="initial-data" type="application/json">
-              ${JSON.stringify(data)}
-          </script>
-  
-          <!-- 水合标记 -->
-          <script>
-              window.__HYDRATION_READY__ = true;
-              window.__INITIAL_DATA__ = ${JSON.stringify(data)};
-          </script>
-  
-          <!-- Next.js 运行时 -->
-          <script src="${this.config.nextjsBaseUrl}/_next/static/chunks/webpack.js" defer></script>
-          <script src="${this.config.nextjsBaseUrl}/_next/static/chunks/main.js" defer></script>
-          <script src="${this.config.nextjsBaseUrl}/_next/static/chunks/pages/_app.js" defer></script>
-          <script src="${this.config.nextjsBaseUrl}/_next/static/chunks/pages/article.js" defer></script>
-          
-          <!-- 启动水合 -->
-          <script>
-              window.addEventListener('DOMContentLoaded', function() {
-                  console.log('🚀 DOM 加载完成，准备启动 Next.js 水合');
-                  setTimeout(function() {
-                      if (window.__START_HYDRATION__) {
-                          window.__START_HYDRATION__();
-                      }
-                  }, 500);
-              });
-          </script>`;
-    }
-  }
+        <!-- 水合标记 -->
+        <script>
+            window.__HYDRATION_READY__ = true;
+            window.__INITIAL_DATA__ = ${JSON.stringify(data)};
+            window.__HYDRATION_CONFIG__ = {
+                enableCache: ${this.config.enableCache},
+                version: '${data.meta.version}',
+                frontendBaseUrl: '${this.config.nextjsBaseUrl}'
+            };
+        </script>
+
+        <!-- Next.js App Router 资源加载 -->
+        <script>
+            // 动态加载 Next.js 资源
+            function loadNextjsResources() {
+                const frontendUrl = window.__HYDRATION_CONFIG__.frontendBaseUrl;
+                
+                // 加载 Next.js 运行时
+                const scripts = [
+                    '/_next/static/chunks/webpack.js',
+                    '/_next/static/chunks/main-app.js',
+                    '/_next/static/chunks/app/layout.js',
+                    '/_next/static/chunks/app/article/page.js'
+                ];
+                
+                scripts.forEach(src => {
+                    const script = document.createElement('script');
+                    script.src = frontendUrl + src;
+                    script.defer = true;
+                    document.head.appendChild(script);
+                });
+                
+                // 加载样式
+                const styles = [
+                    '/_next/static/css/app/layout.css',
+                    '/_next/static/css/app/article/page.css'
+                ];
+                
+                styles.forEach(href => {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = frontendUrl + href;
+                    document.head.appendChild(link);
+                });
+            }
+            
+            // DOM 加载完成后启动水合
+            window.addEventListener('DOMContentLoaded', function() {
+                console.log('🚀 Backend HTML 加载完成，准备启动 Next.js 水合');
+                
+                if (${isDev}) {
+                    // 开发环境：直接连接到 frontend-node 服务
+                    loadNextjsResources();
+                    
+                    // 等待 Next.js 准备就绪
+                    const checkNextjs = setInterval(() => {
+                        if (window.next && window.next.router) {
+                            clearInterval(checkNextjs);
+                            console.log('✅ Next.js 水合完成');
+                            
+                            // 移除加载状态
+                            document.querySelectorAll('.hydration-pending').forEach(el => {
+                                el.classList.remove('hydration-pending');
+                                el.classList.add('hydration-complete');
+                            });
+                        }
+                    }, 100);
+                } else {
+                    // 生产环境：完整的资源加载
+                    loadNextjsResources();
+                }
+            });
+        </script>`;
+}
 
   /**
    * HTML转义

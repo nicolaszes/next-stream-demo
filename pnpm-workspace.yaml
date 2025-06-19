@@ -1,6 +1,7 @@
 packages:
   - 'packages/*'
   - 'packages/frontend-pr'
+  - "packages/frontend-node"
   - 'packages/backend'
   - 'packages/shared'
   - 'packages/standard-container'

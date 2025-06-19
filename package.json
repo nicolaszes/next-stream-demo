@@ -7,8 +7,8 @@
   ],
   "scripts": {
     "dev:pr": "pnpm --filter frontend-pr dev",
-    "dev:ar": "pnpm --filter frontend dev",
-    "dev:ar-node": "concurrently \"pnpm --filter frontend-ar-node dev\" \"pnpm --filter backend dev\"",
+    "dev": "pnpm --filter frontend dev",
+    "dev:node": "concurrently \"pnpm --filter frontend-node dev\" \"pnpm --filter backend dev\"",
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",
     "build": "pnpm --filter frontend build && pnpm --filter backend build",
